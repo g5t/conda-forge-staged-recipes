@@ -1,0 +1,53 @@
+{% set name = "polystar" %}
+{% set version = "0.4.5" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/polystar-{{ version }}.tar.gz
+  sha256: ca9ecdb0d740958c3c03ebc83b7413bd09129a6335fe31dbce4b3135b27fe62c
+
+build:
+  skip: true  # [py<38]
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+  host:
+    - python >=3.8
+    - setuptools >=64
+    - setuptools-scm >=8
+    - wheel
+    - cmake >=3.24
+    - conan >=2.4.1
+    - ninja
+    - pip
+  run:
+    - python >=3.8
+    - numpy
+
+test:
+  imports:
+    - polystar
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: Polygon and polyhedron operations
+  license: AGPL-3.0 AND BSD-3-Clause
+  license_file:
+    - COPYING
+    - lib/hdf5/LICENSE
+    - lib/tetgen/LICENSE
+    - pysrc/polystar/COPYING
+
+extra:
+  recipe-maintainers:
+    - g5t
